@@ -1,63 +1,53 @@
 using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine.XR.ARFoundation;
+using UnityEngine.XR.ARSubsystems;
 
 public class RoomRecognitionAndSpawn : MonoBehaviour
 {
     public List<GameObject> firePrefabs;
     public float minimumDistanceBetweenFires = 1.0f;
-    public LayerMask floorLayerMask; // Layer mask to identify floor surfaces
+    public ARPlaneManager arPlaneManager; // Reference to ARPlaneManager
     private List<Vector3> spawnPositions = new List<Vector3>();
 
     void Start()
     {
-        Debug.Log("RoomRecognitionAndSpawn started");
-        // Simulate the room recognition by raycasting
-        SimulateRoomRecognition();
+        arPlaneManager.planesChanged += OnPlanesChanged;
     }
 
-    private void SimulateRoomRecognition()
+    void OnDestroy()
     {
-        int spawnCount = 0;
-        // This example uses raycasting to detect the floor and spawn fires
-        for (int i = 0; i < firePrefabs.Count; i++) // Ensure all firePrefabs are spawned
-        {
-            bool spawned = false;
-            int attempts = 0;
+        arPlaneManager.planesChanged -= OnPlanesChanged;
+    }
 
-            while (!spawned && attempts < 100) // Allow up to 100 attempts to find a valid position
+    private void OnPlanesChanged(ARPlanesChangedEventArgs args)
+    {
+        foreach (var plane in args.added)
+        {
+            // Check if we can spawn a fire prefab at the center of the plane
+            Vector3 spawnPoint = plane.center;
+            if (IsValidPosition(spawnPoint))
             {
-                Vector3 randomPoint = new Vector3(Random.Range(-5.0f, 5.0f), 10.0f, Random.Range(-5.0f, 5.0f));
-                Debug.Log("Raycasting from point: " + randomPoint);
-                if (Physics.Raycast(randomPoint, Vector3.down, out RaycastHit hit, Mathf.Infinity, floorLayerMask))
+                // Instantiate the fire prefab at the plane's center
+                GameObject firePrefab = GetNextFirePrefab();
+                if (firePrefab != null)
                 {
-                    Debug.Log("Hit detected at point: " + hit.point);
-                    Vector3 spawnPoint = hit.point;
-                    if (IsValidPosition(spawnPoint))
-                    {
-                        Instantiate(firePrefabs[i], spawnPoint, Quaternion.identity);
-                        spawnPositions.Add(spawnPoint);
-                        Debug.Log("Fire spawned at position: " + spawnPoint);
-                        spawned = true;
-                        spawnCount++;
-                    }
+                    Instantiate(firePrefab, spawnPoint, Quaternion.identity);
+                    spawnPositions.Add(spawnPoint);
                 }
-                attempts++;
-            }
-
-            if (!spawned)
-            {
-                Debug.LogWarning("Failed to spawn fire prefab: " + firePrefabs[i].name);
             }
         }
+    }
 
-        if (spawnCount < firePrefabs.Count)
+    private GameObject GetNextFirePrefab()
+    {
+        if (firePrefabs.Count > 0)
         {
-            Debug.LogWarning("Not all fire prefabs were successfully spawned.");
+            GameObject firePrefab = firePrefabs[0];
+            firePrefabs.RemoveAt(0);
+            return firePrefab;
         }
-        else
-        {
-            Debug.Log("All fire prefabs successfully spawned.");
-        }
+        return null;
     }
 
     private bool IsValidPosition(Vector3 position)
