@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
@@ -13,6 +12,7 @@ public class UIManager : MonoBehaviour
     public Button playButton;
     public Button tutorialButton;
     public Button nextButton;
+    public Button mainMenuButton; // Tambahkan referensi untuk tombol Main Menu
     public float clearTutorialDelay = 2f;
 
     private FireSpawner fireSpawner;
@@ -29,6 +29,7 @@ public class UIManager : MonoBehaviour
         playButton.onClick.AddListener(OnPlayButtonClick);
         tutorialButton.onClick.AddListener(OnTutorialButtonClick);
         nextButton.onClick.AddListener(OnNextButtonClick);
+        mainMenuButton.onClick.AddListener(OnMainMenuButtonClick); // Tambahkan listener untuk tombol Main Menu
 
         // Pastikan semua objek api dinonaktifkan pada awalnya
         fireSpawner.DeactivateAllFires();
@@ -148,5 +149,19 @@ public class UIManager : MonoBehaviour
 
             uiCanvas.transform.DOLocalMove(targetPosition, 1f).SetDelay(i * 0.5f);
         }
+    }
+
+    public void OnMainMenuButtonClick()
+    {
+        // Menonaktifkan semua canvas
+        DeactivateAllCanvases();
+
+        // Mengaktifkan canvas main menu
+        mainMenuCanvas.SetActive(true);
+
+        // Mengatur ulang game ke kondisi awal
+        playGameCanvas.SetActive(false);
+        canvasClearTutorial.SetActive(false);
+        fireSpawner.DeactivateAllFires();
     }
 }

@@ -256,8 +256,8 @@ RectTransform:
   - {fileID: 6818268604528378715}
   - {fileID: 9142350711421987973}
   - {fileID: 9057251023605845563}
-  - {fileID: 1123414925566218263}
   - {fileID: 8973685838170604621}
+  - {fileID: 1123414925566218263}
   m_Father: {fileID: 5759909972700037430}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
@@ -739,7 +739,7 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
-  m_PresetInfoIsWorld: 1
+  m_PresetInfoIsWorld: 0
 --- !u!114 &3440956012440175133
 MonoBehaviour:
   m_ObjectHideFlags: 0
