@@ -19,6 +19,7 @@ public class FireSpawner : MonoBehaviour
     {
         Debug.Log("FireSpawner started");
         arPlaneManager.planesChanged += OnPlanesChanged;
+        AddSpawnPointsForExistingPlanes();
     }
 
     void OnDestroy()
@@ -26,18 +27,37 @@ public class FireSpawner : MonoBehaviour
         arPlaneManager.planesChanged -= OnPlanesChanged;
     }
 
+    private void AddSpawnPointsForExistingPlanes()
+    {
+        foreach (var plane in arPlaneManager.trackables)
+        {
+            AddSpawnPoint(plane);
+        }
+    }
+
     private void OnPlanesChanged(ARPlanesChangedEventArgs args)
     {
         foreach (var plane in args.added)
         {
-            // Check if the position is valid to add a spawn point
-            Vector3 spawnPoint = plane.center;
-            if (IsValidPosition(spawnPoint))
+            AddSpawnPoint(plane);
+        }
+
+        foreach (var plane in args.updated)
+        {
+            if (!spawnPositions.Contains(plane.center))
             {
-                // Add the spawn point to the list
-                spawnPositions.Add(spawnPoint);
-                Debug.Log("Spawn point added at position: " + spawnPoint);
+                AddSpawnPoint(plane);
             }
+        }
+    }
+
+    private void AddSpawnPoint(ARPlane plane)
+    {
+        Vector3 spawnPoint = plane.center;
+        if (IsValidPosition(spawnPoint))
+        {
+            spawnPositions.Add(spawnPoint);
+            Debug.Log("Spawn point added at position: " + spawnPoint);
         }
     }
 
@@ -95,7 +115,7 @@ public class FireSpawner : MonoBehaviour
         }
         currentFireObjects.Clear();
         spawnPositions.Clear();
-        SimulateRoomRecognition();
+        AddSpawnPointsForExistingPlanes();
     }
 
     public void DestroyRemainingFires()
@@ -114,12 +134,6 @@ public class FireSpawner : MonoBehaviour
         }
     }
 
-    private void SimulateRoomRecognition()
-    {
-        // This method can be used to simulate the room recognition if needed
-        // For now, it's left empty as the primary spawning is handled by AR plane detection
-    }
-
     public void SpawnFiresAtSpawnPoints()
     {
         foreach (var spawnPoint in spawnPositions)
@@ -127,10 +141,21 @@ public class FireSpawner : MonoBehaviour
             GameObject firePrefab = GetNextFirePrefab();
             if (firePrefab != null)
             {
-                GameObject fireInstance = Instantiate(firePrefab, spawnPoint, Quaternion.identity);
+                Vector3 randomSpawnPoint = GetRandomSpawnPoint();
+                GameObject fireInstance = Instantiate(firePrefab, randomSpawnPoint, Quaternion.identity);
                 currentFireObjects.Add(fireInstance);
-                Debug.Log("Fire spawned at position: " + spawnPoint);
+                Debug.Log("Fire spawned at position: " + randomSpawnPoint);
             }
         }
+    }
+
+    private Vector3 GetRandomSpawnPoint()
+    {
+        if (spawnPositions.Count > 0)
+        {
+            int randomIndex = Random.Range(0, spawnPositions.Count);
+            return spawnPositions[randomIndex];
+        }
+        return Vector3.zero;
     }
 }
