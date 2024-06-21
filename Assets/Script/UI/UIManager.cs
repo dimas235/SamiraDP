@@ -79,7 +79,7 @@ public class UIManager : MonoBehaviour
         }
         else
         {
-            fireSpawner.RespawnFires();
+            fireSpawner.SpawnFiresAtSpawnPoints(); // Mengubah dari RespawnFires ke SpawnFiresAtSpawnPoints
         }
 
         DeactivateAllCanvases();
