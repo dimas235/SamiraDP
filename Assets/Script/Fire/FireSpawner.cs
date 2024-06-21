@@ -30,19 +30,13 @@ public class FireSpawner : MonoBehaviour
     {
         foreach (var plane in args.added)
         {
-            // Check if we can spawn a fire prefab at the center of the plane
+            // Check if the position is valid to add a spawn point
             Vector3 spawnPoint = plane.center;
             if (IsValidPosition(spawnPoint))
             {
-                // Instantiate the fire prefab at the plane's center
-                GameObject firePrefab = GetNextFirePrefab();
-                if (firePrefab != null)
-                {
-                    GameObject fireInstance = Instantiate(firePrefab, spawnPoint, Quaternion.identity);
-                    currentFireObjects.Add(fireInstance);
-                    spawnPositions.Add(spawnPoint);
-                    Debug.Log("Fire spawned at position: " + spawnPoint);
-                }
+                // Add the spawn point to the list
+                spawnPositions.Add(spawnPoint);
+                Debug.Log("Spawn point added at position: " + spawnPoint);
             }
         }
     }
@@ -51,8 +45,9 @@ public class FireSpawner : MonoBehaviour
     {
         if (firePrefabs.Count > 0)
         {
-            GameObject firePrefab = firePrefabs[0];
-            firePrefabs.RemoveAt(0);
+            int randomIndex = Random.Range(0, firePrefabs.Count);
+            GameObject firePrefab = firePrefabs[randomIndex];
+            firePrefabs.RemoveAt(randomIndex);
             return firePrefab;
         }
         return null;
@@ -123,5 +118,19 @@ public class FireSpawner : MonoBehaviour
     {
         // This method can be used to simulate the room recognition if needed
         // For now, it's left empty as the primary spawning is handled by AR plane detection
+    }
+
+    public void SpawnFiresAtSpawnPoints()
+    {
+        foreach (var spawnPoint in spawnPositions)
+        {
+            GameObject firePrefab = GetNextFirePrefab();
+            if (firePrefab != null)
+            {
+                GameObject fireInstance = Instantiate(firePrefab, spawnPoint, Quaternion.identity);
+                currentFireObjects.Add(fireInstance);
+                Debug.Log("Fire spawned at position: " + spawnPoint);
+            }
+        }
     }
 }
