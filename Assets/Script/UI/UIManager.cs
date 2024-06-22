@@ -15,6 +15,7 @@ public class UIManager : MonoBehaviour
     public Button NextToMainMenu;
     public Button nextButton;
     public Button mainMenuButton; // Tambahkan referensi untuk tombol Main Menu
+    public Button quitButton; // Tambahkan referensi untuk tombol Quit
     public float clearTutorialDelay = 2f;
     private FireSpawner fireSpawner;
 
@@ -31,6 +32,7 @@ public class UIManager : MonoBehaviour
         tutorialButton.onClick.AddListener(OnTutorialButtonClick);
         nextButton.onClick.AddListener(OnNextButtonClick);
         mainMenuButton.onClick.AddListener(OnMainMenuButtonClick); // Tambahkan listener untuk tombol Main Menu
+        quitButton.onClick.AddListener(OnQuitButtonClick); // Tambahkan listener untuk tombol Quit
         NextToMainMenu.onClick.AddListener(OnToMainMenu);
 
         // Pastikan semua objek api dinonaktifkan pada awalnya
@@ -177,5 +179,11 @@ public class UIManager : MonoBehaviour
         CanvasSetUp.SetActive(false);
         fireSpawner.RespawnFires(); // Panggil RespawnFires untuk menghancurkan api dan reset flag
         fireSpawner.EnableSpawning(); // Panggil EnableSpawning untuk menambahkan titik spawn
+    }
+
+    private void OnQuitButtonClick()
+    {
+        Debug.Log("Keluar dari aplikasi.");
+        Application.Quit();
     }
 }

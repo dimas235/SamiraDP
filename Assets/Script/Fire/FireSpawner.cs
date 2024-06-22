@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.XR.ARFoundation;
 using UnityEngine.XR.ARSubsystems;
+using Unity.Collections;
 
 public class FireSpawner : MonoBehaviour
 {
@@ -10,6 +11,7 @@ public class FireSpawner : MonoBehaviour
     public float minDistanceFromPlayer = 0.5f;
     public float maxDistanceFromPlayer = 3.0f;
     public float minimumDistanceBetweenFires = 2.0f; // Mengubah jarak minimum menjadi 2
+    public float minDistanceFromWall = 0.5f; // Tambahkan margin minimum dari tembok
     public ARPlaneManager arPlaneManager; // Referensi ke ARPlaneManager
 
     private List<Vector3> spawnPositions = new List<Vector3>();
@@ -36,12 +38,12 @@ public class FireSpawner : MonoBehaviour
         Vector3 planeCenter = plane.center;
         Vector2 planeSize = plane.size;
 
-        for (float x = -planeSize.x / 2; x <= planeSize.x / 2; x += gridSize)
+        for (float x = -planeSize.x / 2 + minDistanceFromWall; x <= planeSize.x / 2 - minDistanceFromWall; x += gridSize)
         {
-            for (float z = -planeSize.y / 2; z <= planeSize.y / 2; z += gridSize)
+            for (float z = -planeSize.y / 2 + minDistanceFromWall; z <= planeSize.y / 2 - minDistanceFromWall; z += gridSize)
             {
                 Vector3 potentialSpawnPoint = planeCenter + new Vector3(x, 0, z);
-                if (IsValidPosition(potentialSpawnPoint))
+                if (IsValidPosition(potentialSpawnPoint, plane))
                 {
                     spawnPositions.Add(potentialSpawnPoint);
                     Debug.Log("Titik spawn ditambahkan pada posisi: " + potentialSpawnPoint);
@@ -55,8 +57,15 @@ public class FireSpawner : MonoBehaviour
         }
     }
 
-    private bool IsValidPosition(Vector3 position)
+    private bool IsValidPosition(Vector3 position, ARPlane plane)
     {
+        // Cek apakah posisi berada dalam batas ARPlane
+        if (!PolygonContainsPoint(plane.boundary, new Vector2(position.x, position.z), minDistanceFromWall))
+        {
+            Debug.Log("Posisi berada di luar batas ARPlane atau terlalu dekat dengan tembok: " + position);
+            return false;
+        }
+
         // Cek jarak dari pemain
         float distanceFromPlayer = Vector3.Distance(position, playerTransform.position);
         if (distanceFromPlayer < minDistanceFromPlayer || distanceFromPlayer > maxDistanceFromPlayer)
@@ -74,7 +83,41 @@ public class FireSpawner : MonoBehaviour
                 return false;
             }
         }
+
+        // Cek jika posisi berada di dalam tembok atau area yang tidak valid
+        if (Physics.Raycast(position, Vector3.down, out RaycastHit hit))
+        {
+            if (hit.collider.CompareTag("Wall"))
+            {
+                Debug.Log("Posisi berada di dalam tembok: " + position);
+                return false;
+            }
+        }
+
         return true;
+    }
+
+    private bool PolygonContainsPoint(NativeArray<Vector2> polygon, Vector2 point, float margin)
+    {
+        bool isInside = false;
+        for (int i = 0, j = polygon.Length - 1; i < polygon.Length; j = i++)
+        {
+            Vector2 v1 = polygon[i];
+            Vector2 v2 = polygon[j];
+
+            // Menambahkan margin untuk memastikan jarak minimum dari batas ARPlane
+            v1.x += margin * Mathf.Sign(v1.x - point.x);
+            v1.y += margin * Mathf.Sign(v1.y - point.y);
+            v2.x += margin * Mathf.Sign(v2.x - point.x);
+            v2.y += margin * Mathf.Sign(v2.y - point.y);
+
+            if (((v1.y > point.y) != (v2.y > point.y)) &&
+                (point.x < (v2.x - v1.x) * (point.y - v1.y) / (v2.y - v1.y) + v1.x))
+            {
+                isInside = !isInside;
+            }
+        }
+        return isInside;
     }
 
     public void DeactivateAllFires()
