@@ -4361,14 +4361,14 @@ ParticleSystem:
         - serializedVersion: 3
           time: 0
           value: 1
-          inSlope: -7.961746
-          outSlope: -7.961746
+          inSlope: -8.535565
+          outSlope: -8.535565
           tangentMode: 0
           weightedMode: 0
           inWeight: 0.33333334
-          outWeight: 0.19444442
+          outWeight: 0.13130432
         - serializedVersion: 3
-          time: 0.2
+          time: 0.25570947
           value: 0
           inSlope: 0
           outSlope: 0
@@ -4379,11 +4379,11 @@ ParticleSystem:
         - serializedVersion: 3
           time: 1
           value: 1
-          inSlope: 1.4252476
-          outSlope: 1.4252476
+          inSlope: 2.2544103
+          outSlope: 2.2544103
           tangentMode: 0
           weightedMode: 0
-          inWeight: 0.11258286
+          inWeight: 0.112426095
           outWeight: 0.33333334
         m_PreInfinity: 2
         m_PostInfinity: 2
@@ -4790,7 +4790,7 @@ ParticleSystemRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_RenderMode: 0
   m_MeshDistribution: 0
   m_SortMode: 3
@@ -4799,7 +4799,7 @@ ParticleSystemRenderer:
   m_CameraVelocityScale: 0
   m_VelocityScale: 0
   m_LengthScale: 2
-  m_SortingFudge: -1
+  m_SortingFudge: 0
   m_NormalDirection: 1
   m_ShadowBias: 0
   m_RenderAlignment: 0
@@ -9669,7 +9669,7 @@ ParticleSystemRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 4
   m_RenderMode: 1
   m_MeshDistribution: 0
   m_SortMode: 0
@@ -9678,7 +9678,7 @@ ParticleSystemRenderer:
   m_CameraVelocityScale: 0
   m_VelocityScale: 0
   m_LengthScale: 1
-  m_SortingFudge: -4
+  m_SortingFudge: 0
   m_NormalDirection: 1
   m_ShadowBias: 0
   m_RenderAlignment: 4
@@ -14894,7 +14894,7 @@ ParticleSystem:
     startSize:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 0.2
+      scalar: 1
       minScalar: 2.5
       maxCurve:
         serializedVersion: 2
@@ -18493,7 +18493,7 @@ ParticleSystem:
     intensityCurve:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 0.05
+      scalar: 2
       minScalar: 1
       maxCurve:
         serializedVersion: 2
@@ -23800,14 +23800,14 @@ ParticleSystem:
         - serializedVersion: 3
           time: 0
           value: 1
-          inSlope: -10.464657
-          outSlope: -10.464657
+          inSlope: -8.535565
+          outSlope: -8.535565
           tangentMode: 0
           weightedMode: 0
           inWeight: 0.33333334
-          outWeight: 0.13859901
+          outWeight: 0.13130432
         - serializedVersion: 3
-          time: 0.21682611
+          time: 0.25570947
           value: 0
           inSlope: 0
           outSlope: 0
@@ -29050,7 +29050,7 @@ ParticleSystemRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: -50
   m_RenderMode: 0
   m_MeshDistribution: 0
   m_SortMode: 0
@@ -29059,7 +29059,7 @@ ParticleSystemRenderer:
   m_CameraVelocityScale: 0
   m_VelocityScale: 0
   m_LengthScale: 2
-  m_SortingFudge: 10
+  m_SortingFudge: 0
   m_NormalDirection: 1
   m_ShadowBias: 0
   m_RenderAlignment: 0
@@ -33442,14 +33442,14 @@ ParticleSystem:
         - serializedVersion: 3
           time: 0
           value: 1
-          inSlope: -7.953139
-          outSlope: -7.953139
+          inSlope: -8.535565
+          outSlope: -8.535565
           tangentMode: 0
           weightedMode: 0
           inWeight: 0.33333334
-          outWeight: 0.18236712
+          outWeight: 0.13130432
         - serializedVersion: 3
-          time: 0.25386316
+          time: 0.25570947
           value: 0
           inSlope: 0
           outSlope: 0
@@ -33871,7 +33871,7 @@ ParticleSystemRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 2
   m_RenderMode: 0
   m_MeshDistribution: 0
   m_SortMode: 3
@@ -33880,7 +33880,7 @@ ParticleSystemRenderer:
   m_CameraVelocityScale: 0
   m_VelocityScale: 0
   m_LengthScale: 2
-  m_SortingFudge: -2
+  m_SortingFudge: 0
   m_NormalDirection: 1
   m_ShadowBias: 0
   m_RenderAlignment: 0
