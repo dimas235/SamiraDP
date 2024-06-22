@@ -5,88 +5,72 @@ using UnityEngine.XR.ARSubsystems;
 
 public class FireSpawner : MonoBehaviour
 {
-    public List<GameObject> firePrefabs;
-    public Transform playerTransform; // Reference to the player's transform
+    public List<GameObject> firePrefabs; // Daftar prefab api tetap
+    public Transform playerTransform; // Referensi ke transformasi pemain
     public float minDistanceFromPlayer = 0.5f;
     public float maxDistanceFromPlayer = 3.0f;
-    public float minimumDistanceBetweenFires = 1.0f;
-    public ARPlaneManager arPlaneManager; // Reference to ARPlaneManager
+    public float minimumDistanceBetweenFires = 2.0f; // Mengubah jarak minimum menjadi 2
+    public ARPlaneManager arPlaneManager; // Referensi ke ARPlaneManager
 
     private List<Vector3> spawnPositions = new List<Vector3>();
-    public List<GameObject> currentFireObjects { get; private set; } = new List<GameObject>(); // List of current fire objects in the scene
+    public List<GameObject> currentFireObjects { get; private set; } = new List<GameObject>(); // Daftar objek api saat ini di scene
+    private bool spawnPointsAdded = false; // Flag untuk memastikan titik spawn hanya ditambahkan sekali
+    private bool hasSpawned = false; // Flag untuk memastikan api hanya di-spawn sekali
 
     void Start()
     {
-        Debug.Log("FireSpawner started");
-        arPlaneManager.planesChanged += OnPlanesChanged;
-        AddSpawnPointsForExistingPlanes();
-    }
-
-    void OnDestroy()
-    {
-        arPlaneManager.planesChanged -= OnPlanesChanged;
+        Debug.Log("FireSpawner dimulai");
     }
 
     private void AddSpawnPointsForExistingPlanes()
     {
         foreach (var plane in arPlaneManager.trackables)
         {
-            AddSpawnPoint(plane);
+            AddSpawnPointsOnPlane(plane);
         }
     }
 
-    private void OnPlanesChanged(ARPlanesChangedEventArgs args)
+    private void AddSpawnPointsOnPlane(ARPlane plane)
     {
-        foreach (var plane in args.added)
-        {
-            AddSpawnPoint(plane);
-        }
+        float gridSize = minimumDistanceBetweenFires;
+        Vector3 planeCenter = plane.center;
+        Vector2 planeSize = plane.size;
 
-        foreach (var plane in args.updated)
+        for (float x = -planeSize.x / 2; x <= planeSize.x / 2; x += gridSize)
         {
-            if (!spawnPositions.Contains(plane.center))
+            for (float z = -planeSize.y / 2; z <= planeSize.y / 2; z += gridSize)
             {
-                AddSpawnPoint(plane);
+                Vector3 potentialSpawnPoint = planeCenter + new Vector3(x, 0, z);
+                if (IsValidPosition(potentialSpawnPoint))
+                {
+                    spawnPositions.Add(potentialSpawnPoint);
+                    Debug.Log("Titik spawn ditambahkan pada posisi: " + potentialSpawnPoint);
+                }
             }
         }
-    }
 
-    private void AddSpawnPoint(ARPlane plane)
-    {
-        Vector3 spawnPoint = plane.center;
-        if (IsValidPosition(spawnPoint))
+        if (spawnPositions.Count < firePrefabs.Count)
         {
-            spawnPositions.Add(spawnPoint);
-            Debug.Log("Spawn point added at position: " + spawnPoint);
+            Debug.LogWarning("Tidak dapat menemukan cukup titik spawn yang valid.");
         }
-    }
-
-    private GameObject GetNextFirePrefab()
-    {
-        if (firePrefabs.Count > 0)
-        {
-            int randomIndex = Random.Range(0, firePrefabs.Count);
-            GameObject firePrefab = firePrefabs[randomIndex];
-            firePrefabs.RemoveAt(randomIndex);
-            return firePrefab;
-        }
-        return null;
     }
 
     private bool IsValidPosition(Vector3 position)
     {
-        // Check distance from player
+        // Cek jarak dari pemain
         float distanceFromPlayer = Vector3.Distance(position, playerTransform.position);
         if (distanceFromPlayer < minDistanceFromPlayer || distanceFromPlayer > maxDistanceFromPlayer)
         {
+            Debug.Log("Posisi terlalu dekat atau terlalu jauh dari pemain: " + position);
             return false;
         }
 
-        // Check distance between fires
+        // Cek jarak antar api
         foreach (var existingPosition in spawnPositions)
         {
             if (Vector3.Distance(position, existingPosition) < minimumDistanceBetweenFires)
             {
+                Debug.Log("Posisi terlalu dekat dengan api lain: " + position);
                 return false;
             }
         }
@@ -106,6 +90,7 @@ public class FireSpawner : MonoBehaviour
 
     public void RespawnFires()
     {
+        Debug.Log("Respawning fires...");
         foreach (var fire in currentFireObjects)
         {
             if (fire != null)
@@ -116,46 +101,70 @@ public class FireSpawner : MonoBehaviour
         currentFireObjects.Clear();
         spawnPositions.Clear();
         AddSpawnPointsForExistingPlanes();
+        hasSpawned = false; // Reset flag untuk memungkinkan spawn kembali
     }
 
     public void DestroyRemainingFires()
     {
+        Debug.Log("Menghancurkan api yang tersisa...");
         for (int i = 0; i < currentFireObjects.Count; i++)
         {
             if (currentFireObjects[i] != null)
             {
-                Fire fireComponent = currentFireObjects[i].GetComponent<Fire>();
-                if (fireComponent != null && !fireComponent.canTakeDamage)
-                {
-                    Destroy(currentFireObjects[i]);
-                    currentFireObjects[i] = null; // Set to null so it can be respawned later
-                }
+                Destroy(currentFireObjects[i]);
+                currentFireObjects[i] = null; // Set ke null agar dapat di-spawn ulang nanti
             }
         }
+        currentFireObjects.Clear();
+        hasSpawned = false; // Reset flag untuk memungkinkan spawn kembali
+        Debug.Log("Semua api yang tersisa dihancurkan.");
     }
 
     public void SpawnFiresAtSpawnPoints()
     {
-        foreach (var spawnPoint in spawnPositions)
+        if (!spawnPointsAdded)
         {
-            GameObject firePrefab = GetNextFirePrefab();
-            if (firePrefab != null)
-            {
-                Vector3 randomSpawnPoint = GetRandomSpawnPoint();
-                GameObject fireInstance = Instantiate(firePrefab, randomSpawnPoint, Quaternion.identity);
-                currentFireObjects.Add(fireInstance);
-                Debug.Log("Fire spawned at position: " + randomSpawnPoint);
-            }
+            Debug.LogWarning("Titik spawn belum ditambahkan. Panggil EnableSpawning terlebih dahulu.");
+            return;
         }
+
+        if (hasSpawned)
+        {
+            Debug.LogWarning("Api sudah di-spawn, tidak bisa spawn lagi.");
+            return;
+        }
+
+        Debug.Log("Menambahkan api pada titik spawn...");
+
+        if (spawnPositions.Count < firePrefabs.Count)
+        {
+            Debug.LogWarning("Tidak cukup titik spawn untuk menambahkan semua api.");
+            return;
+        }
+
+        // Menggunakan HashSet untuk memastikan posisi unik
+        HashSet<Vector3> usedSpawnPositions = new HashSet<Vector3>();
+
+        for (int i = 0; i < firePrefabs.Count; i++)
+        {
+            Vector3 spawnPoint = spawnPositions[i];
+            usedSpawnPositions.Add(spawnPoint);
+
+            GameObject fireInstance = Instantiate(firePrefabs[i], spawnPoint, Quaternion.identity);
+            currentFireObjects.Add(fireInstance);
+            Debug.Log("Api ditambahkan pada posisi: " + spawnPoint);
+        }
+
+        hasSpawned = true; // Set flag untuk mencegah spawn berulang
     }
 
-    private Vector3 GetRandomSpawnPoint()
+    public void EnableSpawning()
     {
-        if (spawnPositions.Count > 0)
+        if (!spawnPointsAdded)
         {
-            int randomIndex = Random.Range(0, spawnPositions.Count);
-            return spawnPositions[randomIndex];
+            Debug.Log("Menambahkan titik spawn...");
+            AddSpawnPointsForExistingPlanes();
+            spawnPointsAdded = true; // Set flag untuk mencegah penambahan berulang
         }
-        return Vector3.zero;
     }
 }

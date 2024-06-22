@@ -9,12 +9,13 @@ public class UIManager : MonoBehaviour
     public GameObject playGameCanvas;
     public GameObject canvasClearTutorial;
     public GameObject[] uiCanvases;
+    public GameObject CanvasSetUp;
     public Button playButton;
     public Button tutorialButton;
+    public Button NextToMainMenu;
     public Button nextButton;
     public Button mainMenuButton; // Tambahkan referensi untuk tombol Main Menu
     public float clearTutorialDelay = 2f;
-
     private FireSpawner fireSpawner;
 
     private void Start()
@@ -30,6 +31,7 @@ public class UIManager : MonoBehaviour
         tutorialButton.onClick.AddListener(OnTutorialButtonClick);
         nextButton.onClick.AddListener(OnNextButtonClick);
         mainMenuButton.onClick.AddListener(OnMainMenuButtonClick); // Tambahkan listener untuk tombol Main Menu
+        NextToMainMenu.onClick.AddListener(OnToMainMenu);
 
         // Pastikan semua objek api dinonaktifkan pada awalnya
         fireSpawner.DeactivateAllFires();
@@ -76,10 +78,12 @@ public class UIManager : MonoBehaviour
         if (anyActive)
         {
             fireSpawner.DeactivateAllFires();
+            Debug.Log("All fires deactivated.");
         }
         else
         {
-            fireSpawner.SpawnFiresAtSpawnPoints(); // Mengubah dari RespawnFires ke SpawnFiresAtSpawnPoints
+            fireSpawner.SpawnFiresAtSpawnPoints();
+            Debug.Log("Fires spawned.");
         }
 
         DeactivateAllCanvases();
@@ -163,5 +167,15 @@ public class UIManager : MonoBehaviour
         playGameCanvas.SetActive(false);
         canvasClearTutorial.SetActive(false);
         fireSpawner.DeactivateAllFires();
+    }
+
+    public void OnToMainMenu()
+    {
+        DeactivateAllCanvases();
+        mainMenuCanvas.SetActive(true);
+        fireSpawner.DeactivateAllFires();
+        CanvasSetUp.SetActive(false);
+        fireSpawner.RespawnFires(); // Panggil RespawnFires untuk menghancurkan api dan reset flag
+        fireSpawner.EnableSpawning(); // Panggil EnableSpawning untuk menambahkan titik spawn
     }
 }
