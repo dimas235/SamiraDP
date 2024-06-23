@@ -566,10 +566,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fire: {fileID: 7970223318401006165}
   hpImage: {fileID: 6841750900280724886}
-  vfxParent: {fileID: 8224011542127272053}
-  excludedVFX:
-  - {fileID: 6390748015583030208}
-  - {fileID: 5144664242380484229}
+  vfxParent: {fileID: 2489883063980166057}
+  excludedVFX: []
   healthBar: {fileID: 4571258821629774246}
 --- !u!1001 &624044914771569324
 PrefabInstance:
@@ -832,16 +830,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8206b722d11501a449d6a278cca2adfa, type: 3}
---- !u!4 &5144664242380484229 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 5750121825688814633, guid: 8206b722d11501a449d6a278cca2adfa, type: 3}
-  m_PrefabInstance: {fileID: 624044914771569324}
-  m_PrefabAsset: {fileID: 0}
---- !u!4 &6390748015583030208 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 5771770836071661932, guid: 8206b722d11501a449d6a278cca2adfa, type: 3}
-  m_PrefabInstance: {fileID: 624044914771569324}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &8224011542127272053 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8829451551789304537, guid: 8206b722d11501a449d6a278cca2adfa, type: 3}
