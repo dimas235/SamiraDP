@@ -21,6 +21,7 @@ public class UIManager : MonoBehaviour
     public Button goToTutorialSetUp;
     public float clearTutorialDelay = 2f;
     private FireSpawner fireSpawner;
+    private int currentStage = 0; // Stage saat ini
 
     private void Start()
     {
@@ -42,6 +43,9 @@ public class UIManager : MonoBehaviour
 
         // Pastikan semua objek api dinonaktifkan pada awalnya
         fireSpawner.DeactivateAllFires();
+
+        // Panggil metode untuk memperbarui status tombol saat memulai
+        FindObjectOfType<ButtonApar>().UpdateButtonStates();
     }
 
     private void OnPlayButtonClick()
@@ -135,6 +139,8 @@ public class UIManager : MonoBehaviour
     {
         yield return new WaitForSeconds(clearTutorialDelay);
         canvasClearTutorial.SetActive(true);
+        currentStage++;
+        FindObjectOfType<ButtonApar>().UpdateButtonStates();
     }
 
     private IEnumerator DestroyRemainingFiresWithDelay()
@@ -174,6 +180,8 @@ public class UIManager : MonoBehaviour
         playGameCanvas.SetActive(false);
         canvasClearTutorial.SetActive(false);
         fireSpawner.DeactivateAllFires();
+        currentStage = 0; // Reset stage ke awal
+        FindObjectOfType<ButtonApar>().UpdateButtonStates(); // Perbarui status tombol
     }
 
     public void OnToMainMenu()
@@ -184,6 +192,8 @@ public class UIManager : MonoBehaviour
         CanvasSetUp.SetActive(false);
         fireSpawner.RespawnFires(); // Panggil RespawnFires untuk menghancurkan api dan reset flag
         fireSpawner.EnableSpawning(); // Panggil EnableSpawning untuk menambahkan titik spawn
+        currentStage = 0; // Reset stage ke awal
+        FindObjectOfType<ButtonApar>().UpdateButtonStates(); // Perbarui status tombol
     }
 
     private void OnQuitButtonClick()
@@ -198,7 +208,6 @@ public class UIManager : MonoBehaviour
         CanvasSetUp.SetActive(true);
         fireSpawner.DeactivateAllFires();
         TutorialCanvas.SetActive(false);
-
     }
 
     public void OnToTutorial()
@@ -206,5 +215,10 @@ public class UIManager : MonoBehaviour
         DeactivateAllCanvases();
         TutorialCanvas.SetActive(true);
         CanvasSetUp.SetActive(false);
+    }
+
+    public int GetCurrentStage()
+    {
+        return currentStage;
     }
 }

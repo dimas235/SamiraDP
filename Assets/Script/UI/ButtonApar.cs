@@ -18,12 +18,22 @@ public class ButtonApar : MonoBehaviour
             return;
         }
 
+        uiManager = FindObjectOfType<UIManager>();
+        if (uiManager == null)
+        {
+            Debug.LogError("UIManager tidak ditemukan di scene.");
+            return;
+        }
+
         // Tambahkan listener ke setiap tombol
         for (int i = 0; i < buttons.Count; i++)
         {
             int index = i; // Menyimpan indeks untuk digunakan dalam lambda
             buttons[i].onClick.AddListener(() => ActivateParticle(index));
         }
+
+        // Set initial button states
+        UpdateButtonStates();
 
         // Pastikan tidak ada partikel yang aktif pada awalnya
         DeactivateAllParticles();
@@ -66,5 +76,33 @@ public class ButtonApar : MonoBehaviour
         }
 
         uiManager.UseParticle();
+    }
+
+    public void UpdateButtonStates()
+    {
+        int stage = uiManager.GetCurrentStage();
+
+        for (int i = 0; i < buttons.Count; i++)
+        {
+            if (i <= stage)
+            {
+                buttons[i].interactable = true;
+                SetButtonTransparency(buttons[i], 1f);
+            }
+            else
+            {
+                buttons[i].interactable = false;
+                SetButtonTransparency(buttons[i], 0.5f);
+            }
+        }
+    }
+
+    private void SetButtonTransparency(Button button, float alpha)
+    {
+        ColorBlock colors = button.colors;
+        Color disabledColor = colors.disabledColor;
+        disabledColor.a = alpha;
+        colors.disabledColor = disabledColor;
+        button.colors = colors;
     }
 }
