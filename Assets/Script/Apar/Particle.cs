@@ -1,10 +1,12 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.XR.Interaction.Toolkit.Inputs.Haptics;
 
 public class Particle : MonoBehaviour
 {
     public ParticleSystem foamParticleSystem;
     public InputActionReference spawnAction;
+    public HapticImpulsePlayer hapticImpulsePlayer; // Tambahkan referensi ke HapticImpulsePlayer
 
     public float damageInterval = 0.5f; // Interval waktu antara setiap pengurangan HP (dalam detik)
 
@@ -34,6 +36,7 @@ public class Particle : MonoBehaviour
         if (!foamParticleSystem.isPlaying)
         {
             foamParticleSystem.Play();
+            TriggerHapticFeedback(true); // Mulai getaran saat partikel mulai
         }
     }
 
@@ -42,6 +45,7 @@ public class Particle : MonoBehaviour
         if (foamParticleSystem.isPlaying)
         {
             foamParticleSystem.Stop();
+            TriggerHapticFeedback(false); // Hentikan getaran saat partikel berhenti
         }
     }
 
@@ -55,5 +59,23 @@ public class Particle : MonoBehaviour
 
         lastDamageTime = Time.time; // Update waktu terakhir damage diterapkan
         return true;
+    }
+
+    // Fungsi untuk mengaktifkan atau menghentikan getaran di controller kiri
+    private void TriggerHapticFeedback(bool isPlaying)
+    {
+        if (hapticImpulsePlayer != null)
+        {
+            if (isPlaying)
+            {
+                hapticImpulsePlayer.SendHapticImpulse(0.5f, 0.1f); // Atur amplitudo dan durasi getaran sesuai keinginan
+            }
+            else
+            {
+                // Fungsi untuk menghentikan getaran bisa berbeda tergantung pada implementasi HapticImpulsePlayer Anda
+                // Jika tidak ada metode untuk menghentikan getaran, Anda mungkin harus menyesuaikan skrip HapticImpulsePlayer
+                hapticImpulsePlayer.SendHapticImpulse(0, 0.1f); // Mengirim getaran dengan amplitudo 0 untuk menghentikan getaran
+            }
+        }
     }
 }

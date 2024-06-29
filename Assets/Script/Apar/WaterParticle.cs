@@ -3,9 +3,6 @@ using UnityEngine.InputSystem;
 
 public class WaterParticle : Particle
 {
-    public Transform leftController; // Referensi ke transform controller kiri
-    private Vector3 initialPositionOffset;
-
     public float effectiveDamage = 10f;
 
     private ParticleIndicator usageIndicator;
@@ -15,12 +12,6 @@ public class WaterParticle : Particle
 
     private void Start()
     {
-        if (leftController != null)
-        {
-            // Simpan offset posisi awal antara objek dan controller kiri
-            initialPositionOffset = transform.position - leftController.position;
-        }
-
         // Cari ParticleIndicator di scene
         usageIndicator = FindObjectOfType<ParticleIndicator>();
         if (usageIndicator == null)
@@ -31,13 +22,6 @@ public class WaterParticle : Particle
 
     private void Update()
     {
-        // Update posisi dari objek dan partikel mengikuti controller kiri
-        if (leftController != null)
-        {
-            // Mengikuti posisi controller kiri dengan mempertahankan offset awal
-            transform.position = leftController.position + initialPositionOffset;
-        }
-
         // Berhenti mengeluarkan partikel jika indikator penggunaan habis
         if (isSpawning && usageIndicator != null && usageIndicator.CurrentUsage <= 0)
         {

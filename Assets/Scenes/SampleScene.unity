@@ -1969,7 +1969,11 @@ PrefabInstance:
     - target: {fileID: 175169386346491804, guid: de5ebec557582c0408ff955c49d555c7, type: 3}
       propertyPath: leftController
       value: 
-      objectReference: {fileID: 687378719}
+      objectReference: {fileID: 0}
+    - target: {fileID: 175169386346491804, guid: de5ebec557582c0408ff955c49d555c7, type: 3}
+      propertyPath: hapticImpulsePlayer
+      value: 
+      objectReference: {fileID: 687378720}
     - target: {fileID: 321360698749390458, guid: de5ebec557582c0408ff955c49d555c7, type: 3}
       propertyPath: m_IsActive
       value: 0
@@ -2042,6 +2046,10 @@ PrefabInstance:
       propertyPath: leftController
       value: 
       objectReference: {fileID: 687378719}
+    - target: {fileID: 1130142590166494041, guid: de5ebec557582c0408ff955c49d555c7, type: 3}
+      propertyPath: hapticImpulsePlayer
+      value: 
+      objectReference: {fileID: 687378720}
     - target: {fileID: 1289344084596524264, guid: de5ebec557582c0408ff955c49d555c7, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -2130,10 +2138,18 @@ PrefabInstance:
       propertyPath: leftController
       value: 
       objectReference: {fileID: 687378719}
+    - target: {fileID: 3022823121715820959, guid: de5ebec557582c0408ff955c49d555c7, type: 3}
+      propertyPath: hapticImpulsePlayer
+      value: 
+      objectReference: {fileID: 687378720}
     - target: {fileID: 3124033191386606362, guid: de5ebec557582c0408ff955c49d555c7, type: 3}
       propertyPath: leftController
       value: 
       objectReference: {fileID: 687378719}
+    - target: {fileID: 3124033191386606362, guid: de5ebec557582c0408ff955c49d555c7, type: 3}
+      propertyPath: hapticImpulsePlayer
+      value: 
+      objectReference: {fileID: 687378720}
     - target: {fileID: 3865254128325346555, guid: de5ebec557582c0408ff955c49d555c7, type: 3}
       propertyPath: InitialModule.startColor.maxColor.b
       value: 1
@@ -2371,6 +2387,17 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 6484816945243591627, guid: 86a5bf68cb51f4e44bd3893bd22a2ba7, type: 3}
   m_PrefabInstance: {fileID: 1109407790274764219}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &687378720 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 806090905615963224, guid: 86a5bf68cb51f4e44bd3893bd22a2ba7, type: 3}
+  m_PrefabInstance: {fileID: 1109407790274764219}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b734f2bd29eeddd4d85afb0c266228c3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &695288981 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 770657379447309315, guid: 2785c1a6f2b124e48817f9c55c094254, type: 3}
@@ -9738,7 +9765,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5233414676629791169, guid: 42d8c02fc4c90ba4e8e470ed8ca460ea, type: 3}
       propertyPath: m_RotationFollowMode
-      value: 3
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 5295909780891059047, guid: 42d8c02fc4c90ba4e8e470ed8ca460ea, type: 3}
       propertyPath: m_IsActive
