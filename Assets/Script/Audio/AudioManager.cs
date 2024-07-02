@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.Audio;
 
@@ -13,8 +14,13 @@ public class AudioManager : MonoBehaviour
     public AudioClip[] sfxClips;
     public AudioClip[] bgmClips;
 
+    [Header("Fade In Settings")]
+    public float fadeDuration = 2.0f;
+
     [Header("Audio Mixer")]
     public AudioMixer audioMixer;
+
+    private float bgmStartVolume;
 
     private void Awake()
     {
@@ -41,15 +47,18 @@ public class AudioManager : MonoBehaviour
         SetMasterVolume(masterVolume);
         SetBGMVolume(bgmVolume);
         SetSFXVolume(sfxVolume);
+
     }
 
     public void PlayBGM(int index)
     {
         if (index >= 0 && index < bgmClips.Length)
         {
+            bgmStartVolume = bgmSource.volume;
             bgmSource.clip = bgmClips[index];
             bgmSource.loop = true;
             bgmSource.Play();
+            StartCoroutine(FadeInBGM());
         }
     }
 
@@ -85,5 +94,17 @@ public class AudioManager : MonoBehaviour
         float volume = Mathf.Lerp(-30f, 0f, sliderValue / 10f);
         audioMixer.SetFloat("SFXVolume", volume);
         PlayerPrefs.SetFloat("SFXVolume", sliderValue);
+    }
+
+    IEnumerator FadeInBGM()
+    {
+        float currentTime = 0f;
+
+        while (currentTime < fadeDuration)
+        {
+            currentTime += Time.deltaTime;
+            bgmSource.volume = Mathf.Lerp(0, bgmStartVolume, currentTime / fadeDuration);
+            yield return null;
+        }
     }
 }
