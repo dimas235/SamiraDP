@@ -5,6 +5,7 @@ using DG.Tweening;
 
 public class UIManager : MonoBehaviour
 {
+    public GameObject fireInformationCanvas;
     public GameObject mainMenuCanvas;
     public GameObject playGameCanvas;
     public GameObject canvasClearTutorial;
@@ -19,6 +20,8 @@ public class UIManager : MonoBehaviour
     public Button quitButton; // Tambahkan referensi untuk tombol Quit
     public Button NextToInformation;
     public Button goToTutorialSetUp;
+    public Button goToFireInformation;
+    public Button backFireInformation;
     public float clearTutorialDelay = 2f;
     private FireSpawner fireSpawner;
     private int currentStage = 0; // Stage saat ini
@@ -40,12 +43,30 @@ public class UIManager : MonoBehaviour
         NextToMainMenu.onClick.AddListener(OnToMainMenu);
         NextToInformation.onClick.AddListener(OnToInformation);
         goToTutorialSetUp.onClick.AddListener(OnToTutorial);
+        goToFireInformation.onClick.AddListener(OnToFireIndormation);
+        backFireInformation.onClick.AddListener(OnBackFireInformation);
 
         // Pastikan semua objek api dinonaktifkan pada awalnya
         fireSpawner.DeactivateAllFires();
 
         // Panggil metode untuk memperbarui status tombol saat memulai
         FindObjectOfType<ButtonApar>().UpdateButtonStates();
+    }
+
+    private void OnToFireIndormation()
+    {
+        DeactivateAllCanvases();
+        mainMenuCanvas.SetActive(false);
+        playGameCanvas.SetActive(false);
+        fireInformationCanvas.SetActive(true);
+    }
+
+    private void OnBackFireInformation()
+    {
+        DeactivateAllCanvases();
+        fireInformationCanvas.SetActive(false);
+        mainMenuCanvas.SetActive(false);
+        playGameCanvas.SetActive(true);
     }
 
     private void OnPlayButtonClick()
