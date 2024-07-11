@@ -45,6 +45,7 @@ public class WaterParticle : Particle
 
     protected override void OnSpawnStarted(InputAction.CallbackContext context)
     {
+        Debug.Log("WaterParticle OnSpawnStarted called");
         if (isLocked)
         {
             // Tidak memulai partikel jika terkunci
@@ -60,6 +61,7 @@ public class WaterParticle : Particle
 
     protected override void OnSpawnCanceled(InputAction.CallbackContext context)
     {
+        Debug.Log("WaterParticle OnSpawnCanceled called");
         StopParticle();
     }
 
@@ -68,7 +70,9 @@ public class WaterParticle : Particle
         if (!foamParticleSystem.isPlaying)
         {
             foamParticleSystem.Play();
+            Debug.Log("WaterParticle Started");
             isSpawning = true;
+            TriggerHapticFeedback(true); // Mulai getaran saat partikel mulai
         }
     }
 
@@ -77,7 +81,9 @@ public class WaterParticle : Particle
         if (foamParticleSystem.isPlaying)
         {
             foamParticleSystem.Stop();
+            Debug.Log("WaterParticle Stopped");
             isSpawning = false;
+            TriggerHapticFeedback(false); // Hentikan getaran saat partikel berhenti
         }
     }
 
