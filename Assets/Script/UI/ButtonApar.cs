@@ -32,12 +32,12 @@ public class ButtonApar : MonoBehaviour
             buttons[i].onClick.AddListener(() => ActivateParticle(index));
         }
 
-        // Set initial button states
-        UpdateButtonStates();
-
         // Pastikan tidak ada partikel yang aktif pada awalnya
         DeactivateAllParticles();
         iconManager.SetDefaultIcon();
+
+        // Set initial button states setelah uiManager diinisialisasi
+        UpdateButtonStates();
     }
 
     private void ActivateParticle(int index)
@@ -80,6 +80,11 @@ public class ButtonApar : MonoBehaviour
 
     public void UpdateButtonStates()
     {
+        if (uiManager == null)
+        {
+            return;
+        }
+
         int stage = uiManager.GetCurrentStage();
 
         for (int i = 0; i < buttons.Count; i++)

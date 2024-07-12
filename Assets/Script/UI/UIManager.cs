@@ -67,6 +67,8 @@ public class UIManager : MonoBehaviour
         fireInformationCanvas.SetActive(false);
         mainMenuCanvas.SetActive(false);
         playGameCanvas.SetActive(true);
+
+        AudioManager.instance.StopSFX();
     }
 
     private void OnPlayButtonClick()
@@ -207,14 +209,49 @@ public class UIManager : MonoBehaviour
 
     public void OnToMainMenu()
     {
+        Debug.Log("Memulai transisi ke Main Menu");
+
+        // Menonaktifkan semua kanvas
         DeactivateAllCanvases();
+        Debug.Log("Semua kanvas dinonaktifkan");
+
+        // Mengaktifkan kanvas Main Menu
         mainMenuCanvas.SetActive(true);
+        Debug.Log("Kanvas Main Menu diaktifkan");
+
+        // Menonaktifkan semua api
         fireSpawner.DeactivateAllFires();
+        Debug.Log("Semua api dinonaktifkan");
+
+        // Menonaktifkan kanvas SetUp
         CanvasSetUp.SetActive(false);
-        fireSpawner.RespawnFires(); // Panggil RespawnFires untuk menghancurkan api dan reset flag
-        fireSpawner.EnableSpawning(); // Panggil EnableSpawning untuk menambahkan titik spawn
-        currentStage = 0; // Reset stage ke awal
-        FindObjectOfType<ButtonApar>().UpdateButtonStates(); // Perbarui status tombol
+        Debug.Log("Kanvas SetUp dinonaktifkan");
+
+        // Menghancurkan api dan mereset flag
+        fireSpawner.RespawnFires();
+        Debug.Log("Api dihancurkan dan flag direset");
+
+        // Menambahkan titik spawn
+        fireSpawner.EnableSpawning();
+        Debug.Log("Titik spawn ditambahkan");
+
+        // Mereset stage ke awal
+        currentStage = 0;
+        Debug.Log("Stage direset ke awal");
+
+        // Memperbarui status tombol
+        ButtonApar buttonApar = FindObjectOfType<ButtonApar>();
+        if (buttonApar != null)
+        {
+            buttonApar.UpdateButtonStates();
+            Debug.Log("Status tombol diperbarui");
+        }
+        else
+        {
+            Debug.LogWarning("ButtonApar tidak ditemukan");
+        }
+
+        Debug.Log("Transisi ke Main Menu selesai");
     }
 
     private void OnQuitButtonClick()

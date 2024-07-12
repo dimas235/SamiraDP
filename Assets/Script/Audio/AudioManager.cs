@@ -50,6 +50,11 @@ public class AudioManager : MonoBehaviour
 
     }
 
+    public void StopSFX()
+    {
+        sfxSource.Stop();
+    }
+
     public void PlayBGM(int index)
     {
         if (index >= 0 && index < bgmClips.Length)

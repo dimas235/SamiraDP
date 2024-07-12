@@ -17,7 +17,7 @@ public class Particle : MonoBehaviour
 
     private void OnEnable()
     {
-        Debug.Log("Particle OnEnable called");
+        Debug.Log("Particle OnEnable dipanggil");
         spawnActionRight.action.started += OnSpawnStarted;
         spawnActionRight.action.canceled += OnSpawnCanceled;
 
@@ -31,29 +31,29 @@ public class Particle : MonoBehaviour
 
     private void OnDisable()
     {
-        Debug.Log("Particle OnDisable called");
+        Debug.Log("Particle OnDisable dipanggil");
         spawnActionRight.action.started -= OnSpawnStarted;
         spawnActionRight.action.canceled -= OnSpawnCanceled;
     }
 
     protected virtual void OnSpawnStarted(InputAction.CallbackContext context)
     {
-        Debug.Log("OnSpawnStarted called");
+        Debug.Log("OnSpawnStarted dipanggil");
         if (!foamParticleSystem.isPlaying)
         {
             foamParticleSystem.Play();
-            Debug.Log("Particle Started");
+            Debug.Log("Partikel dimulai");
             TriggerHapticFeedback(true); // Mulai getaran saat partikel mulai
         }
     }
 
     protected virtual void OnSpawnCanceled(InputAction.CallbackContext context)
     {
-        Debug.Log("OnSpawnCanceled called");
+        Debug.Log("OnSpawnCanceled dipanggil");
         if (foamParticleSystem.isPlaying)
         {
             foamParticleSystem.Stop();
-            Debug.Log("Particle Stopped");
+            Debug.Log("Partikel dihentikan");
             TriggerHapticFeedback(false); // Hentikan getaran saat partikel berhenti
         }
     }
@@ -62,7 +62,7 @@ public class Particle : MonoBehaviour
     {
         if (Time.time - lastDamageTime < damageInterval)
         {
-            // Jika belum melewati interval waktu yang ditentukan, tidak menerapkan damage
+            Debug.Log("Damage tidak diterapkan karena belum melewati interval waktu yang ditentukan");
             return false;
         }
 
@@ -73,7 +73,7 @@ public class Particle : MonoBehaviour
     // Fungsi untuk mengaktifkan atau menghentikan getaran di controller kiri
     protected void TriggerHapticFeedback(bool isPlaying) // Ubah akses ke protected
     {
-        Debug.Log("TriggerHapticFeedback called with isPlaying: " + isPlaying);
+        Debug.Log("TriggerHapticFeedback dipanggil dengan isPlaying: " + isPlaying);
         if (hapticImpulsePlayerLeft != null)
         {
             Debug.Log("HapticImpulsePlayer ditemukan");
@@ -92,6 +92,7 @@ public class Particle : MonoBehaviour
                     hapticCoroutine = null;
                 }
                 hapticImpulsePlayerLeft.SendHapticImpulse(0, 0.1f); // Mengirim getaran dengan amplitudo 0 untuk menghentikan getaran
+                Debug.Log("Haptic feedback dihentikan");
             }
         }
         else
@@ -105,7 +106,7 @@ public class Particle : MonoBehaviour
         while (true)
         {
             bool result = hapticImpulsePlayerLeft.SendHapticImpulse(1f, hapticInterval);
-            Debug.Log(result ? "Haptic feedback sent" : "Failed to send haptic feedback");
+            Debug.Log(result ? "Haptic feedback berhasil dikirim" : "Gagal mengirim haptic feedback");
             yield return new WaitForSeconds(hapticInterval);
         }
     }

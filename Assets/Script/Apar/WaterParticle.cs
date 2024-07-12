@@ -18,6 +18,10 @@ public class WaterParticle : Particle
         {
             Debug.LogError("ParticleIndicator tidak ditemukan di scene.");
         }
+        else
+        {
+            Debug.Log("ParticleIndicator ditemukan");
+        }
     }
 
     private void Update()
@@ -27,12 +31,14 @@ public class WaterParticle : Particle
         {
             StopParticle();
             isLocked = true; // Kunci partikel ketika indikator mencapai nol
+            Debug.Log("Partikel terkunci karena indikator penggunaan habis");
         }
 
         // Cek apakah indikator sudah penuh dan buka kunci jika tidak sedang ditekan
         if (isLocked && usageIndicator != null && usageIndicator.CurrentUsage >= usageIndicator.maxUsage && !isSpawning)
         {
             isLocked = false;
+            Debug.Log("Partikel tidak terkunci karena indikator penggunaan penuh dan tidak sedang digunakan");
         }
 
         // Pastikan indikator tidak berkurang jika tidak sedang menggunakan partikel
@@ -40,15 +46,16 @@ public class WaterParticle : Particle
         {
             usageIndicator.StopUsingParticle();
             wasUsingParticle = false;
+            Debug.Log("Penggunaan partikel dihentikan dan indikator tidak berkurang");
         }
     }
 
     protected override void OnSpawnStarted(InputAction.CallbackContext context)
     {
-        Debug.Log("WaterParticle OnSpawnStarted called");
+        Debug.Log("WaterParticle OnSpawnStarted dipanggil");
         if (isLocked)
         {
-            // Tidak memulai partikel jika terkunci
+            Debug.Log("Partikel tidak dimulai karena terkunci");
             return;
         }
 
@@ -61,7 +68,7 @@ public class WaterParticle : Particle
 
     protected override void OnSpawnCanceled(InputAction.CallbackContext context)
     {
-        Debug.Log("WaterParticle OnSpawnCanceled called");
+        Debug.Log("WaterParticle OnSpawnCanceled dipanggil");
         StopParticle();
     }
 
@@ -70,7 +77,7 @@ public class WaterParticle : Particle
         if (!foamParticleSystem.isPlaying)
         {
             foamParticleSystem.Play();
-            Debug.Log("WaterParticle Started");
+            Debug.Log("WaterParticle dimulai");
             isSpawning = true;
             TriggerHapticFeedback(true); // Mulai getaran saat partikel mulai
         }
@@ -81,7 +88,7 @@ public class WaterParticle : Particle
         if (foamParticleSystem.isPlaying)
         {
             foamParticleSystem.Stop();
-            Debug.Log("WaterParticle Stopped");
+            Debug.Log("WaterParticle dihentikan");
             isSpawning = false;
             TriggerHapticFeedback(false); // Hentikan getaran saat partikel berhenti
         }
@@ -94,7 +101,7 @@ public class WaterParticle : Particle
             return;
         }
 
-        Debug.Log("Particle bertabrakan dengan: " + other.name);
+        Debug.Log("Partikel bertabrakan dengan: " + other.name);
 
         // Cek apakah objek yang bertabrakan memiliki komponen Fire
         Fire fire = other.GetComponent<Fire>();
